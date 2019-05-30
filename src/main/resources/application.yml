@@ -1,0 +1,20 @@
+server:
+  port: 9368
+  servlet:
+    context-path: /redis
+
+
+spring:
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    seconds: 43200
+    pool:
+      max-active: 1000
+      max-wait: 10000
+      max-idle: 100
+      min-idle: 30
+    timeout: 10000
+    testOnBorrow: true
+    testWhileIdle: true

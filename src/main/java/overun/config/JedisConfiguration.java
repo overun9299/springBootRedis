@@ -27,16 +27,16 @@ public class JedisConfiguration{
     private static Logger logger = LoggerFactory.getLogger(JedisConfiguration.class);
 
     /**  */
-    @Value("${spring.redis.pool.max-active}")
+    @Value("${spring.redis.jedis.pool.max-active}")
     private String maxActive;
     /**  */
-    @Value("${spring.redis.pool.max-idle}")
+    @Value("${spring.redis.jedis.pool.max-idle}")
     private String maxIdle;
     /**  */
-    @Value("${spring.redis.pool.min-idle}")
+    @Value("${spring.redis.jedis.pool.min-idle}")
     private String minIdle;
     /**  */
-    @Value("${spring.redis.pool.max-wait}")
+    @Value("${spring.redis.jedis.pool.max-wait}")
     private String maxWait;
     /**  */
     @Value("${spring.redis.testOnBorrow}")

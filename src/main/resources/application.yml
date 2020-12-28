@@ -7,8 +7,9 @@ server:
 spring:
   redis:
     database: 0
-    host: 127.0.0.1
+    host: 192.168.190.128
     port: 6379
+    password: 9299
     seconds: 43200
     jedis:
       pool:

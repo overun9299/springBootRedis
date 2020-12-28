@@ -56,6 +56,8 @@ public class JedisConfiguration{
     /**  */
     @Value("${spring.redis.host}")
     private String host;
+    @Value("${spring.redis.password}")
+    private String password;
 
     /**
      * 创建jedis 连接池
@@ -75,7 +77,7 @@ public class JedisConfiguration{
 //        String password = propertyResolver.getProperty("redis.password");
         int database = Integer.parseInt(dataBase);
         logger.info("jedisPool初始化完成......");
-        return new JedisPool(jedisPoolConfig,host,port,timeout,null,database);
+        return new JedisPool(jedisPoolConfig,host,port,timeout,password,database);
     }
 
     /**

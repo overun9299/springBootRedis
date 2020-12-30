@@ -1,5 +1,6 @@
 package overun.config;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,6 +77,9 @@ public class JedisConfiguration{
         int timeout = Integer.parseInt(timeOut);
 //        String password = propertyResolver.getProperty("redis.password");
         int database = Integer.parseInt(dataBase);
+        if (StringUtils.isBlank(password)) {
+            password = null;
+        }
         logger.info("jedisPool初始化完成......");
         return new JedisPool(jedisPoolConfig,host,port,timeout,password,database);
     }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import overun.redis.JedisTools;
+import overun.redis.RedisClient;
 
 /**
  * @ClassName: testController
@@ -22,6 +23,9 @@ public class testController {
     @Autowired
     private JedisTools jedisTools;
 
+    @Autowired
+    private RedisClient redisClient;
+
     @RequestMapping(value = "/test")
     @ResponseBody
     public void testRedis() {
@@ -37,6 +41,24 @@ public class testController {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    /**
+     * 发布消息
+     */
+    @RequestMapping(value = "/publishMessage")
+    @ResponseBody
+    public void publishMessage() {
+        redisClient.publish("luck" , "luck please");
+    }
+
+    /**
+     * 订阅消息
+     */
+    @RequestMapping(value = "/subscribeMessage")
+    @ResponseBody
+    public void subscribeMessage() {
+        redisClient.subscribe(null,null,"luck");
     }
 
 

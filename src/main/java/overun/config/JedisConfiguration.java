@@ -6,13 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.JedisShardInfo;
-import redis.clients.jedis.ShardedJedisPool;
+import redis.clients.jedis.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @ClassName: JedisConfiguration
@@ -60,6 +56,17 @@ public class JedisConfiguration{
     @Value("${spring.redis.password}")
     private String password;
 
+    /** 哨兵master name **/
+    @Value("${spring.redis.sentinel.master}")
+    private String sentinelMaster;
+    /** 哨兵节点 **/
+    @Value("${spring.redis.sentinel.nodes}")
+    private String sentinelNode;
+    /** 哨兵密码 **/
+    @Value("${spring.redis.sentinel.password}")
+    private String sentinelPassword;
+
+
     /**
      * 创建jedis 连接池
      * */
@@ -75,13 +82,34 @@ public class JedisConfiguration{
         jedisPoolConfig.setTestWhileIdle(Boolean.parseBoolean(testWhileIdle));
         int port = Integer.parseInt(ports);
         int timeout = Integer.parseInt(timeOut);
-//        String password = propertyResolver.getProperty("redis.password");
         int database = Integer.parseInt(dataBase);
         if (StringUtils.isBlank(password)) {
             password = null;
         }
         logger.info("jedisPool初始化完成......");
         return new JedisPool(jedisPoolConfig,host,port,timeout,password,database);
+    }
+
+    @Bean
+    public JedisSentinelPool getJedisSentinelPool() {
+        logger.info("初始化JedisSentinelPool......");
+        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+        jedisPoolConfig.setMaxTotal(Integer.parseInt(maxActive));
+        jedisPoolConfig.setMaxIdle(Integer.parseInt(maxIdle));
+        jedisPoolConfig.setMinIdle(Integer.parseInt(minIdle));
+        jedisPoolConfig.setMaxWaitMillis(Integer.parseInt(maxWait));
+        jedisPoolConfig.setTestOnBorrow(Boolean.parseBoolean(testOnBorrow));
+        jedisPoolConfig.setTestWhileIdle(Boolean.parseBoolean(testWhileIdle));
+        int timeout = Integer.parseInt(timeOut);
+        int database = Integer.parseInt(dataBase);
+
+        Set<String> hostSet = new HashSet<>();
+        List<String> strings = Arrays.asList(sentinelNode.split(","));
+        hostSet.addAll(strings);
+        if (StringUtils.isBlank(sentinelPassword)) {
+            sentinelPassword = null;
+        }
+        return new JedisSentinelPool(sentinelMaster , hostSet , jedisPoolConfig , timeout , sentinelPassword , database);
     }
 
     /**

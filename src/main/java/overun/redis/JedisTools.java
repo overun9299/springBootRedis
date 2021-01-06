@@ -12,6 +12,7 @@ import overun.utils.SerializeUtil;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -396,14 +397,13 @@ public class JedisTools {
     
     /**
      * 监听消息通道
-     * @param jedisPubSub 对象
-     * @param channels 消息通道
      * */
-    public void subscribe(JedisPubSub jedisPubSub, String... channels){
+    public void subscribe(Serializable sessionId, String nodeId, String... channels){
     	Jedis jedis = null;
 		try{
+			MyJedisSub myJedisSub = new MyJedisSub(sessionId, nodeId);
 			jedis = jedisPoolOperator.getJedis();
-			jedis.subscribe(jedisPubSub, channels);
+			jedis.subscribe(myJedisSub, channels);
 		}catch(Exception e){
 			logger.error("redis监听消息出现异常:"+e.getMessage());
 			throw new RuntimeException("10000",e);

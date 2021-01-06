@@ -16,7 +16,7 @@ spring:
       master: mymaster
       # 哨兵的ip 可配置多个用,隔开
       nodes: 192.168.3.128:26379
-      # 哨兵密码
+      # 哨兵密码(也是redis的密码)
       password: 9299
     jedis:
       pool:
